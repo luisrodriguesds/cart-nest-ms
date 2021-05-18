@@ -20,4 +20,9 @@ export class ProductsController {
   async create(data: Product) {
     return this.productService.create(data);
   }
+
+  @MessagePattern('find')
+  async find(productId: string) {
+    return this.productService.findOne(productId);
+  }
 }

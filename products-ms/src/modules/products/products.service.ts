@@ -13,6 +13,10 @@ export class ProductsService {
     return this.productModel.find().exec();
   }
 
+  async findOne(productId: string): Promise<Product> {
+    return this.productModel.findOne({ productId }).exec();
+  }
+
   async create(product: Product): Promise<Product> {
     const productCreated = new this.productModel(product);
     return productCreated.save();

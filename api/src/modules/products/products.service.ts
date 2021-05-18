@@ -30,4 +30,8 @@ export class ProductsService {
   create(product: IProduct) {
     return this.client.send<any, IProduct>('create', product);
   }
+
+  findOne(productId: string) {
+    return this.client.send<any, string>('find', productId);
+  }
 }
