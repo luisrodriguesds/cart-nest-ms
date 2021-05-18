@@ -1,20 +1,23 @@
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { ProductsService } from './products.service';
+import { Product } from './schemas/product';
 
 @Controller('')
 export class ProductsController {
   private logger = new Logger('Main');
 
-  @MessagePattern('list')
-  async list(id: number) {
-    this.logger.log(`The product id is ${id}`);
-    const data = [
-      {
-        productId: '192663',
-        price: 267,
-      },
-    ];
+  constructor(private readonly productService: ProductsService) {}
 
-    return data;
+  @MessagePattern('list')
+  async list() {
+    this.logger.log(`Showing products ...`);
+
+    return this.productService.findAll();
+  }
+
+  @MessagePattern('create')
+  async create(data: Product) {
+    return this.productService.create(data);
   }
 }

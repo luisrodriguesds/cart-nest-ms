@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import {
   ClientProxy,
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
+
+interface IProduct {
+  productId: string;
+  price: number;
+}
+
 @Injectable()
 export class ProductsService {
   private client: ClientProxy;
@@ -19,24 +23,11 @@ export class ProductsService {
     });
   }
 
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
-  }
-
   findAll() {
-    return `This action returns all products`;
+    return this.client.send<any, any>('list', '');
   }
 
-  findOne(id: number) {
-    console.log(id, 'string');
-    return this.client.send<any, number>('list', id);
-  }
-
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  create(product: IProduct) {
+    return this.client.send<any, IProduct>('create', product);
   }
 }
