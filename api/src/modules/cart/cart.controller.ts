@@ -16,10 +16,10 @@ export class CartController {
     return this.cartService.list();
   }
 
-  @Delete('/:shoppingCartId')
-  async remove(@Param() { shoppingCartId }, @Body() { userId }) {
+  @Delete('/:productId')
+  async remove(@Param() { productId }, @Body() { userId }) {
     return this.cartService.remove({
-      shoppingCartId,
+      productId,
       userId,
     });
   }

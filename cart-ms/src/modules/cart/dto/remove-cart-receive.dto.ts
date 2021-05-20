@@ -1,5 +1,5 @@
 export class RemoveCartReceive {
-  shoppingCartId: string;
+  productId: string;
 
   userId: string;
 }

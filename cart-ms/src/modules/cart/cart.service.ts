@@ -101,7 +101,29 @@ export class CartService {
   }
 
   async remove(removeCart: RemoveCartReceive) {
-    console.log(removeCart, 'aqui');
+    // Considering that the user can have just one cart until finishing his shopping
+    const getCart = await this.cartRepository.findOne({
+      where: { userId: removeCart.userId },
+      relations: ['products'],
+    });
+
+    if (!getCart) {
+      throw new Error("This user don't have any cart open");
+    }
+
+    const checkHasProduct = getCart.products.find(
+      (product) => product.productId === removeCart.productId,
+    );
+
+    if (!checkHasProduct) {
+      throw new Error("This user don't have this product in his cart");
+    }
+
+    await this.productCartRepository.delete({
+      cartId: getCart.shoppingCartId,
+      productId: removeCart.productId,
+    });
+
     return {};
   }
 }

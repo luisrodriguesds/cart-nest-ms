@@ -1,5 +1,5 @@
 export class RemoveCart {
-  shoppingCartId: string;
+  productId: string;
 
   userId: string;
 }
