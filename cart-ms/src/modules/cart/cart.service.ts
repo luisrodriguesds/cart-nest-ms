@@ -18,77 +18,81 @@ export class CartService {
     private readonly productsService: ProductsService,
   ) {}
 
-  async add(productCart: AddCartReceive) {
+  async add(productCartReceived: AddCartReceive) {
     this.logger.log('The product received is ');
     // Validate data
 
-    // Check IF Product Id Check
-    const resProduct = await this.productsService.findOne(
-      productCart.productId,
+    const product = await this.productsService.findOne(
+      productCartReceived.productId,
     );
 
-    if (!resProduct) {
+    if (!product) {
       throw new Error('The product was not found.');
     }
 
-    // Check if the cart already exist for this user
-    const getCart = await this.cartRepository.findOne({
+    // Considering that the user can have just one cart until finishing his shopping
+    const cart = await this.cartRepository.findOne({
       relations: ['products'],
-      where: { userId: productCart.userId },
-    }); // undefined
+      where: { userId: productCartReceived.userId },
+    });
 
     const productData = {
-      productId: resProduct.productId,
-      quantity: productCart.quantity,
-      price: resProduct.price,
+      productId: product.productId,
+      quantity: productCartReceived.quantity,
+      price: product.price,
     };
-    if (!getCart) {
+    if (!cart) {
       const storeCart = this.cartRepository.create({
-        userId: productCart.userId,
-        totalQuantity: productCart.quantity,
-        totalPrice: resProduct.price,
+        userId: productCartReceived.userId,
         products: [productData],
       });
       const resCart = await this.cartRepository.save(storeCart);
+
       const storeProductCart = this.productCartRepository.create({
         ...productData,
-        cartId: storeCart.shoppingCartId,
+        cartId: resCart.shoppingCartId,
       });
-      await this.productCartRepository.save(storeProductCart);
-      return resCart;
+      const resProductCart = await this.productCartRepository.save(
+        storeProductCart,
+      );
+      return {
+        ...resCart,
+        totalQuantity: productCartReceived.quantity,
+        totalPrice: product.price,
+        products: [resProductCart],
+      };
     }
 
-    // Check if this product already exist for this cart
-    const checkHasProductCart = getCart.products.find(
-      (product) => product.productId === productCart.productId,
+    const checkHasProductCart = cart.products.find(
+      (product) => product.productId === productCartReceived.productId,
     );
     if (checkHasProductCart) {
       throw new Error('This product already exist for this cart.');
     }
 
-    const updateCart = {
-      shoppingCartId: getCart.shoppingCartId,
-      totalQuantity:
-        getCart.products
-          .map((prod) => prod.quantity)
-          .reduce((arr, curr) => curr + arr, 0) + productCart.quantity,
-      totalPrice:
-        getCart.products
-          .map((prod) => Number(prod.price))
-          .reduce((arr, curr) => curr + arr, 0) + Number(resProduct.price),
-    };
-    await this.cartRepository.save(updateCart);
     const storeProductCart = this.productCartRepository.create({
       ...productData,
-      cartId: getCart.shoppingCartId,
+      cartId: cart.shoppingCartId,
     });
     const resProductCart = await this.productCartRepository.save(
       storeProductCart,
     );
 
+    const totalQuantity =
+      cart.products
+        .map((prod) => prod.quantity)
+        .reduce((arr, curr) => curr + arr, 0) + productCartReceived.quantity;
+    const totalPrice =
+      cart.products
+        .map((prod) => prod.price * product.quantity)
+        .reduce((arr, curr) => curr + arr, 0) +
+      product.price * productCartReceived.quantity;
+
     return {
-      ...updateCart,
-      products: [...getCart.products, resProductCart],
+      ...cart,
+      totalQuantity,
+      totalPrice,
+      products: [...cart.products, resProductCart],
     };
   }
 
@@ -97,7 +101,18 @@ export class CartService {
       relations: ['products'],
     });
 
-    return carts;
+    const parseCarts = carts.map((cart) => {
+      return {
+        ...cart,
+        totalQuantity: cart.products
+          .map((product) => product.quantity)
+          .reduce((arr, curr) => arr + curr, 0),
+        totalPrice: cart.products
+          .map((product) => product.price * product.quantity)
+          .reduce((arr, curr) => arr + curr, 0),
+      };
+    });
+    return parseCarts;
   }
 
   async remove(removeCart: RemoveCartReceive) {
@@ -124,6 +139,6 @@ export class CartService {
       productId: removeCart.productId,
     });
 
-    return {};
+    return;
   }
 }

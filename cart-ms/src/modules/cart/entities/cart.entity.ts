@@ -14,17 +14,6 @@ export class Cart {
   })
   userId: string;
 
-  @Column({
-    name: 'total_price',
-    type: 'decimal',
-  })
-  totalPrice: number;
-
-  @Column({
-    name: 'total_quantity',
-  })
-  totalQuantity: number;
-
   @OneToMany(() => ProductCart, (productCart) => productCart.cart)
   products: ProductCart[];
 }
