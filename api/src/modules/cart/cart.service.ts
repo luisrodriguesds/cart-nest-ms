@@ -23,4 +23,8 @@ export class CartService {
   async add(addCart: AddCart) {
     return this.client.send<any, AddCart>('add', addCart);
   }
+
+  async list() {
+    return this.client.send<any, any>('list', '');
+  }
 }

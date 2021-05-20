@@ -10,4 +10,9 @@ export class CartController {
   async add(productCart: any) {
     return this.cartService.add(productCart);
   }
+
+  @MessagePattern('list')
+  async list() {
+    return this.cartService.findAll();
+  }
 }

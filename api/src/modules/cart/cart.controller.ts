@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddCart } from './dto/add-cart.dto';
 
@@ -9,5 +9,10 @@ export class CartController {
   @Post('/add')
   async add(@Body() addCart: AddCart) {
     return this.cartService.add(addCart);
+  }
+
+  @Get('/')
+  async list() {
+    return this.cartService.list();
   }
 }
