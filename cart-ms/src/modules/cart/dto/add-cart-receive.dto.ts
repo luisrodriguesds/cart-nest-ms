@@ -1,4 +1,4 @@
-export class AddCart {
+export class AddCartReceive {
   userId: string;
 
   productId: string;

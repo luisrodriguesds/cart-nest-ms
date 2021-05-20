@@ -5,7 +5,7 @@ export class createProductCart1621507416856 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "product_cart" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cart_id" uuid NOT NULL, "product_id" uuid NOT NULL, "price" decimal NOT NULL, "quantity" integer NOT NULL, CONSTRAINT "PK_a9eb3c6b183961debec3a968f91" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "product_cart" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "cart_id" uuid NOT NULL, "product_id" varchar NOT NULL, "price" decimal NOT NULL, "quantity" integer NOT NULL, CONSTRAINT "PK_a9eb3c6b183961debec3a968f91" PRIMARY KEY ("id"))`,
     );
 
     await queryRunner.createForeignKey(

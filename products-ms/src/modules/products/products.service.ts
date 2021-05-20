@@ -13,8 +13,10 @@ export class ProductsService {
     return this.productModel.find().exec();
   }
 
-  async findOne(productId: string): Promise<Product> {
-    console.log(productId);
+  async findOne(productId: string): Promise<Product | null> {
+    if (!Types.ObjectId.isValid(productId)) {
+      return null;
+    }
     const product = await this.productModel.findOne({
       productId: Types.ObjectId(productId),
     });

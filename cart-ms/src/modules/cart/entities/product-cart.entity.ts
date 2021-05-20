@@ -16,13 +16,13 @@ export class ProductCart {
     name: 'cart_id',
     type: 'uuid',
   })
-  cart_id: string;
+  cartId: string;
 
   @OneToOne(() => Cart, (cart) => cart.shoppingCartId)
   @JoinColumn({ name: 'cart_id', referencedColumnName: 'shoppingCartId' })
   cart: Cart;
 
-  @Column({ type: 'uuid', name: 'product_id' })
+  @Column({ name: 'product_id' })
   productId: string;
 
   @Column({
