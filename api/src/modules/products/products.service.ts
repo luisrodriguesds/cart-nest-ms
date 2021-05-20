@@ -6,7 +6,6 @@ import {
 } from '@nestjs/microservices';
 
 interface IProduct {
-  productId: string;
   price: number;
 }
 

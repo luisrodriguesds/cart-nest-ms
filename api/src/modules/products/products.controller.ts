@@ -12,10 +12,9 @@ export class ProductsController {
 
   @Post()
   async create(@Body() product) {
-    const { productId, price } = product;
+    const { price } = product;
     return this.productsService.create({
       price,
-      productId,
     });
   }
 
