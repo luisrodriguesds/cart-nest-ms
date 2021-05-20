@@ -2,6 +2,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { CartService } from './cart.service';
 import { AddCartReceive } from './dto/add-cart-receive.dto';
+import { RemoveCartReceive } from './dto/remove-cart-receive.dto';
 
 @Controller('cart')
 export class CartController {
@@ -15,5 +16,10 @@ export class CartController {
   @MessagePattern('list')
   async list() {
     return this.cartService.findAll();
+  }
+
+  @MessagePattern('remove')
+  async remove(removeCart: RemoveCartReceive) {
+    return this.cartService.remove(removeCart);
   }
 }

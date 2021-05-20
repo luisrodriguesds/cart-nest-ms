@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddCart } from './dto/add-cart.dto';
 
@@ -14,5 +14,13 @@ export class CartController {
   @Get('/')
   async list() {
     return this.cartService.list();
+  }
+
+  @Delete('/:shoppingCartId')
+  async remove(@Param() { shoppingCartId }, @Body() { userId }) {
+    return this.cartService.remove({
+      shoppingCartId,
+      userId,
+    });
   }
 }

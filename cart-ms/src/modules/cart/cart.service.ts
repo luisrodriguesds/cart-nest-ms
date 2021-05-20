@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductsService } from '../products/products.service';
 import { AddCartReceive } from './dto/add-cart-receive.dto';
+import { RemoveCartReceive } from './dto/remove-cart-receive.dto';
 import { Cart } from './entities/cart.entity';
 import { ProductCart } from './entities/product-cart.entity';
 
@@ -97,5 +98,10 @@ export class CartService {
     });
 
     return carts;
+  }
+
+  async remove(removeCart: RemoveCartReceive) {
+    console.log(removeCart, 'aqui');
+    return {};
   }
 }

@@ -5,6 +5,7 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import { AddCart } from './dto/add-cart.dto';
+import { RemoveCart } from './dto/remove-cart.dto';
 
 @Injectable()
 export class CartService {
@@ -26,5 +27,9 @@ export class CartService {
 
   async list() {
     return this.client.send<any, any>('list', '');
+  }
+
+  async remove(removeCart: RemoveCart) {
+    return this.client.send<any, RemoveCart>('remove', removeCart);
   }
 }
