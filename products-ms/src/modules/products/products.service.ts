@@ -18,16 +18,14 @@ export class ProductsService {
       return null;
     }
     const product = await this.productModel.findOne({
-      productId: Types.ObjectId(productId),
+      _id: Types.ObjectId(productId),
     });
+
     return product;
   }
 
   async create(product: Product): Promise<Product> {
-    const productCreated = new this.productModel({
-      ...product,
-      productId: Types.ObjectId(),
-    });
+    const productCreated = new this.productModel(product);
     return productCreated.save();
   }
 }

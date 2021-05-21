@@ -1,7 +1,9 @@
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { classToPlain } from 'class-transformer';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product';
+import { ProductResponse } from './schemas/product.response';
 
 @Controller('')
 export class ProductsController {
@@ -12,17 +14,29 @@ export class ProductsController {
   @MessagePattern('list')
   async list() {
     this.logger.log(`Showing products ...`);
-
-    return this.productService.findAll();
+    const products = await this.productService.findAll();
+    const productsResponse = products.map((prod) =>
+      classToPlain(new ProductResponse(prod.toJSON())),
+    );
+    return productsResponse;
   }
 
   @MessagePattern('create')
   async create(data: Product) {
-    return this.productService.create(data);
+    const product = await this.productService.create(data);
+    const productResponse = classToPlain(new ProductResponse(product.toJSON()));
+    return productResponse;
   }
 
   @MessagePattern('find')
   async find(productId: string) {
-    return this.productService.findOne(productId);
+    const product = await this.productService.findOne(productId);
+    if (!product) {
+      return product;
+    }
+    const productResponse = classToPlain(
+      new ProductResponse(product?.toJSON()),
+    );
+    return productResponse;
   }
 }
