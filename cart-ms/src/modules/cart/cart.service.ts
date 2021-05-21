@@ -85,7 +85,7 @@ export class CartService {
         .reduce((arr, curr) => curr + arr, 0) + productCartReceived.quantity;
     const totalPrice =
       cart.products
-        .map((prod) => prod.price * product.quantity)
+        .map((prod) => prod.price * prod.quantity)
         .reduce((arr, curr) => curr + arr, 0) +
       product.price * productCartReceived.quantity;
 
@@ -97,22 +97,21 @@ export class CartService {
     };
   }
 
-  async findAll() {
-    const carts = await this.cartRepository.find({
+  async findOne(shoppingCartId: string) {
+    const cart = await this.cartRepository.findOne({
+      where: { shoppingCartId },
       relations: ['products'],
     });
 
-    const parseCarts = carts.map((cart) => {
-      return {
-        ...cart,
-        totalQuantity: cart.products
-          .map((product) => product.quantity)
-          .reduce((arr, curr) => arr + curr, 0),
-        totalPrice: cart.products
-          .map((product) => product.price * product.quantity)
-          .reduce((arr, curr) => arr + curr, 0),
-      };
-    });
+    const parseCarts = {
+      ...cart,
+      totalQuantity: cart.products
+        .map((product) => product.quantity)
+        .reduce((arr, curr) => arr + curr, 0),
+      totalPrice: cart.products
+        .map((product) => product.price * product.quantity)
+        .reduce((arr, curr) => arr + curr, 0),
+    };
     return parseCarts;
   }
 

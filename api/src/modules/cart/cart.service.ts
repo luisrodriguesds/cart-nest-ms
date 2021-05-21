@@ -25,8 +25,8 @@ export class CartService {
     return this.client.send<any, AddCart>('add', addCart);
   }
 
-  async list() {
-    return this.client.send<any, any>('list', '');
+  async show(shoppingCartId: string) {
+    return this.client.send<any, string>('show', shoppingCartId);
   }
 
   async remove(removeCart: RemoveCart) {

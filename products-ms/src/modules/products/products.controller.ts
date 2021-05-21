@@ -3,7 +3,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { classToPlain } from 'class-transformer';
 import { ProductsService } from './products.service';
 import { Product } from './schemas/product';
-import { ProductResponse } from './schemas/product.response';
+import { ProductResponse } from './responses/product.response';
 
 @Controller('')
 export class ProductsController {

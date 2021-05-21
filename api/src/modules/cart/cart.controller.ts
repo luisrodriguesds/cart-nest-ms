@@ -21,9 +21,9 @@ export class CartController {
     return this.cartService.add(addCart);
   }
 
-  @Get('/')
-  async list() {
-    return this.cartService.list();
+  @Get('/:shoppingCartId')
+  async show(@Param() { shoppingCartId }) {
+    return this.cartService.show(shoppingCartId);
   }
 
   @Delete('/:productId')
