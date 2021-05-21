@@ -1,8 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
+import { MicroservicesExceptionFilter } from '../../filters/microservice-exception.filter';
 import { CartService } from './cart.service';
 import { AddCart } from './dto/add-cart.dto';
 
 @Controller('cart')
+@UseFilters(new MicroservicesExceptionFilter())
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

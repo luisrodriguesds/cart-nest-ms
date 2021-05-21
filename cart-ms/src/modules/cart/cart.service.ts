@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductsService } from '../products/products.service';
@@ -27,7 +28,7 @@ export class CartService {
     );
 
     if (!product) {
-      throw new Error('The product was not found.');
+      throw new RpcException('The product was not found.');
     }
 
     // Considering that the user can have just one cart until finishing his shopping
@@ -67,7 +68,7 @@ export class CartService {
       (product) => product.productId === productCartReceived.productId,
     );
     if (checkHasProductCart) {
-      throw new Error('This product already exist for this cart.');
+      throw new RpcException('This product already exist for this cart.');
     }
 
     const storeProductCart = this.productCartRepository.create({
@@ -123,7 +124,7 @@ export class CartService {
     });
 
     if (!getCart) {
-      throw new Error("This user don't have any cart open");
+      throw new RpcException("This user don't have any cart open");
     }
 
     const checkHasProduct = getCart.products.find(
@@ -131,7 +132,7 @@ export class CartService {
     );
 
     if (!checkHasProduct) {
-      throw new Error("This user don't have this product in his cart");
+      throw new RpcException("This user don't have this product in his cart");
     }
 
     await this.productCartRepository.delete({
