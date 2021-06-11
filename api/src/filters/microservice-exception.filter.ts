@@ -8,9 +8,10 @@ export class MicroservicesExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.status ? 400 : 500;
     const message = exception.message
-      ? exception.message
+      ? exception.response
+        ? exception.response.message
+        : exception.message
       : 'Internal Error. Please, try later.';
-
     response.status(status).json({
       statusCode: status,
       message,
